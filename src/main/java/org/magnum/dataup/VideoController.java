@@ -21,9 +21,11 @@ import java.util.*;	// an easier way to import all container
 
 import org.magnum.dataup.model.Video;
 import org.magnum.dataup.model.VideoStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class VideoController {
@@ -68,12 +70,20 @@ public class VideoController {
 	@ResponseBody
 	@PostMapping("/video/{id}/data")
 	public VideoStatus setVideoData(@PathVariable Long id){
+		Boolean videoExisted = Videos.containsKey(id);
+		if (!videoExisted) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "video not found");
+		}
 		return null;
 	}
 
 	@ResponseBody
 	@GetMapping("/video/{id}/data")
 	public ResponseEntity<Video> getVideoData(@PathVariable Long id){
+		Boolean videoExisted = Videos.containsKey(id);
+		if (!videoExisted) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "video not found");
+		}
 		return null;
 	}
 }
