@@ -53,4 +53,13 @@ public class VideoController {
 		return Videos.values();
 	}
 
+	@ResponseBody
+	@PostMapping("/video")
+	public Video addVideo(Video v){
+		v.setId(++count);
+		String videoUrl = "http://localhost:8080/video/" + v.getId() + "/data";
+		v.setDataUrl(videoUrl);
+		Videos.put(v.getId(), v);
+		return v;
+	}
 }
