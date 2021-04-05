@@ -55,7 +55,7 @@ public class VideoController {
 
 	@ResponseBody
 	@PostMapping("/video")
-	public Video addVideo(Video v){
+	public Video addVideo(@RequestBody Video v){
 		v.setId(++count);
 		String videoUrl = "http://localhost:8080/video/" + v.getId() + "/data";
 		v.setDataUrl(videoUrl);
