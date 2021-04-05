@@ -17,14 +17,17 @@
  */
 package org.magnum.dataup;
 
+import java.io.*;	// we need InputStream & OutputStream
 import java.util.*;	// an easier way to import all container
 
 import org.magnum.dataup.model.Video;
 import org.magnum.dataup.model.VideoStatus;
+import org.magnum.dataup.model.VideoStatus.VideoState;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
@@ -69,12 +72,23 @@ public class VideoController {
 
 	@ResponseBody
 	@PostMapping("/video/{id}/data")
-	public VideoStatus setVideoData(@PathVariable Long id){
+	public VideoStatus setVideoData(@PathVariable Long id, @RequestBody MultipartFile videoData){
 		Boolean videoExisted = Videos.containsKey(id);
 		if (!videoExisted) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "video not found");
 		}
-		return null;
+		VideoStatus videoStatus = new VideoStatus(VideoState.PROCESSING);
+		Video v = Videos.get(id);
+		try {
+			VideoFileManager videoFileManager = VideoFileManager.get();
+			InputStream inStream = videoData.getInputStream();
+			videoFileManager.saveVideoData(v, inStream);
+			inStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		videoStatus.setState(VideoState.READY);
+		return videoStatus;
 	}
 
 	@ResponseBody
