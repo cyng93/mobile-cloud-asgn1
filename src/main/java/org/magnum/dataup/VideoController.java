@@ -20,6 +20,8 @@ package org.magnum.dataup;
 import java.util.*;	// an easier way to import all container
 
 import org.magnum.dataup.model.Video;
+import org.magnum.dataup.model.VideoStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,5 +63,17 @@ public class VideoController {
 		v.setDataUrl(videoUrl);
 		Videos.put(v.getId(), v);
 		return v;
+	}
+
+	@ResponseBody
+	@PostMapping("/video/{id}/data")
+	public VideoStatus setVideoData(@PathVariable Long id){
+		return null;
+	}
+
+	@ResponseBody
+	@GetMapping("/video/{id}/data")
+	public ResponseEntity<Video> getVideoData(@PathVariable Long id){
+		return null;
 	}
 }
